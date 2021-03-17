@@ -1,5 +1,8 @@
-# mssql-docker-zfs
-Hack to run the mssql-docker containers with a zfs filesystem mounted as data dir
+# mssql-docker-tmpfs
+[Forked from t-oster/mssql-docker-zfs](https://github.com/t-oster/mssql-docker-zfs)
+Hack to run the mssql-docker containers with a tmpfs filesystem mounted as data dir
+
+## Original Readme
 
 **UPDATE: Since the release of ZFS 0.8 this is no longer necessary. ZFS 0.8 supports O_DIRECT and thus mssql runs fine without any modifications. This repository is only kept for archiving purposes.**
 
