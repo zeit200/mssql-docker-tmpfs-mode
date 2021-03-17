@@ -1,0 +1,16 @@
+name: docker-push
+
+on:
+  push:
+
+jobs:
+  docker-push:
+    name: docker-push
+    runs-on: ubuntu-latest
+    env:
+      DockerRegistryUsername: ${{ secrets.DOCKERREGISTRYUSERNAME }}
+      DockerRegistryPassword: ${{ secrets.DOCKERREGISTRYPASSWORD }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run './build.cmd PushDocker'
+        run: ./build.cmd PushDocker
