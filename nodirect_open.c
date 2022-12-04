@@ -1,11 +1,28 @@
 #define _GNU_SOURCE
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
 #include <dlfcn.h>
 #include <fcntl.h>
-typedef int (*orig_open_f_type)(const char *pathname, int flags);
-int open(const char *pathname, int flags, ...) {
-    static orig_open_f_type orig_open;
-    if (!orig_open) {
-           orig_open = (orig_open_f_type)dlsym(RTLD_NEXT, "open");
-        }
+
+static int (*orig_open)(const char *pathname, int flags, ...) = NULL;
+
+int open(const char *pathname, int flags, ...)
+{
+    if (orig_open == NULL)
+        orig_open = dlsym(RTLD_NEXT, "open");
+
+    if (__OPEN_NEEDS_MODE(flags))
+    {
+        va_list arg;
+        va_start(arg, flags);
+        mode_t mode = va_arg(arg, mode_t);
+        va_end(arg);
+
+        return orig_open(pathname, flags & ~O_DIRECT, mode);
+    }
+    else
+    {
         return orig_open(pathname, flags & ~O_DIRECT);
+    }
 }
